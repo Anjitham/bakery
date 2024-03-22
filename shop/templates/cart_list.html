@@ -1,0 +1,9 @@
+{%extends 'base.html'%}
+
+{%block main_block%}
+{%for bi in data%}
+    {{bi.cake_varient_object.cake_object.name}}
+
+{%endfor%}
+
+{%endblock%}
