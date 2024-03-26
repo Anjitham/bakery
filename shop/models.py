@@ -79,10 +79,17 @@ class Basket(models.Model):
     def cart_items(self):
         return self.cartitem.filter(is_order_placed=False)
     
-
     @property
     def cart_item_count(self):
         return self.cart_items.count()
+    
+    @property
+    def basket_total(self):
+        basket_item=self.cart_items
+        if basket_item:
+            total=sum([bi.item_total for bi in basket_item])
+            return total
+        return 0
 
 
 class BasketItem(models.Model):
@@ -95,9 +102,51 @@ class BasketItem(models.Model):
     updated_date=models.DateTimeField(auto_now=True)
     is_active=models.BooleanField(default=True)
 
+    @property
+    def item_total(self):
+        return self.qty*self.cake_varient_object.price
+    
+class Order(models.Model):
 
+    user_object=models.ForeignKey(User,on_delete=models.CASCADE,related_name="purchase")
+    first_name=models.CharField(max_length=200)
+    last_name=models.CharField(max_length=200)
+    email=models.CharField(max_length=200,null=True)
+    phone_number=models.CharField(max_length=12)
+    delivery_address=models.CharField(max_length=200)
+    is_paid=models.BooleanField(default=False)
+    total=models.PositiveIntegerField()
+    order_id=models.CharField(max_length=200,null=True)
+    options=(
+        ("cod","cod"),
+        ("online","online")
+    )
+    payment=models.CharField(max_length=200,choices=options,default="cod")
+    option=(
+        ("order-placed","order-placed"),
+        ("intransit","intransit"),
+        ("dispatched","dispatched"),
+        ("delivered","delivered"),
+        ("cancelled","cancelled")
+    )
+    status=models.CharField(max_length=200,choices=option,default="order-placed")
 
+    @property
+    def get_order_items(self):
+        return self.purchaseitems.all()
+    @property
+    def get_order_total(self):
+        purchase_items=self.get_order_items
+        order_total=0
+        if purchase_items:
+            order_total=sum([pi.basket_item_object.item_total for pi in purchase_items])
+        return order_total
 
+class OrderItems(models.Model):
+    order_object=models.ForeignKey(Order,on_delete=models.CASCADE,related_name="purchaseitems")
+    basket_item_object=models.ForeignKey(BasketItem,on_delete=models.CASCADE)
+    
+    
 
 def create_basket(sender,instance,created,**kwargs):
     if created:
