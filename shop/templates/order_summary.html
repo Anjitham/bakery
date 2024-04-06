@@ -1,16 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
+{%extends 'base.html'%}
+
+{%block main_block%}
 
 {%for o in data%}
     {%if o.get_order_items%}
-    <div class="mx-auto my-4 max-w-4xl md:my-6">
+    <div class="mx-auto my-5 max-w-4xl md:my-8">
         <div class="overflow-hidden rounded-xl border border-gray-100 shadow">
           <div class="grid grid-cols-1 md:grid-cols-2">
             <div class="px-5 py-6 md:border-r md:border-r-gray-200 md:px-8">
@@ -20,25 +14,25 @@
                   
                     {%for oi in o.get_order_items%}
     
-                    <li class="flex items-stretch justify-between space-x-5 py-7">
+                    <li class="flex items-stretch justify-between space-x-5 py-8">
                         <div class="flex flex-1 items-stretch">
                           <div class="flex-shrink-0">
                             <img
                               class="h-20 w-20 rounded-lg border border-gray-200 object-contain"
-                              src="{{oi.basket_item_object.product_object.image.url}}"
+                              src="{{oi.basket_item_object.cake_varient_object.image.url}}"
                               alt="https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/54a510de-a406-41b2-8d62-7f8c587c9a7e/air-force-1-07-lv8-shoes-9KwrSk.png"
                             />
                           </div>
                           <div class="ml-5 flex flex-col justify-between">
                             <div class="flex-1">
                               <p class="text-sm font-bold text-gray-900">
-                                {{oi.basket_item_object.product_object.title}}
+                                {{oi.basket_item_object.cake_varient_object.cake_object.name}}
                               </p>
                               <p class="mt-1.5 text-sm font-medium text-gray-600">
-                                Size:{{oi.basket_item_object.size_object}}
+                                {{oi.basket_item_object.occasion_object.occasion_name}}
                               </p>
                             </div>
-                            <p class="mt-4 text-sm font-medium text-gray-500">x {{oi.basket_item_object.qty}}</p>
+                            <p class="mt-1.5 text-sm font-medium text-gray-600">Quantity:{{oi.basket_item_object.qty}}</p>
                           </div>
                         </div>
                         <div class="ml-auto flex flex-col items-end justify-between">
@@ -105,7 +99,7 @@
                     <p class="text-xs font-medium text-gray-700">
                       {{o.delivery_address}}
                     </p>
-                    <p class="text-xs font-medium text-gray-700">{{o.phone}}</p>
+                    <p class="text-xs font-medium text-gray-700">{{o.phone_number}}</p>
                   </div>
                   <div class="py-6">
                     <h2 class="text-base font-bold text-black">
@@ -122,11 +116,10 @@
           </div>
         </div>
       </div>
-
-    
     {%endif%}
-  
 {%endfor%}
+
+{%endblock%}
 
 
 

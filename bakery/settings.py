@@ -65,6 +65,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 "shop.context_processors.basket_count",
             ],
+            
         },
     },
 ]

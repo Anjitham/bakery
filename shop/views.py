@@ -11,6 +11,9 @@ from shop.decorators import signin_required,owner_permission_required
 from django.views.decorators.csrf import csrf_exempt
 
 
+KEY_ID="rzp_test_nIHt0Xftg4w37E"
+KEY_SECRET="1G0t5Bv9AVY5H3KgUMowFriQ"
+
 
 
 # lh:8000/register/
@@ -165,32 +168,29 @@ class CheckOutView(View):
             for bi in basket_items:
                 OrderItems.objects.create(
                     order_object=order_obj,
-                    basket_item_object=bi,
+                    basket_item_object=bi
                 )
                 bi.is_order_placed=True
                 bi.save()
         except:
             order_obj.delete()
-
         finally:
-            print(payment_method)
-            print(order_obj)
             if payment_method=="online" and order_obj:
-                client = razorpay.Client(auth=(KEY_ID, KEY_SECRET))
-                data = { "amount": order_obj.get_order_total*100, "currency": "INR", "receipt": "order_rcptid_11" }
-
+                client=razorpay.Client(auth=(KEY_ID,KEY_SECRET))
+                data={"amount":order_obj.get_order_total*100,"currency": "INR", "receipt": "order_rcptid_11" }
                 payment = client.order.create(data=data)
                 order_obj.order_id=payment.get("id")
                 order_obj.save()
-                print("payment initiative:",payment)
                 context={
                     "key":KEY_ID,
                     "order_id":payment.get("id"),
                     "amount":payment.get("amount")
-                      }
+                }
                 return render(request,"payment.html",{"context":context})
+            else:
+                order_obj.save()
+                return redirect("index")
             return redirect("index")
-        
 
 
 @method_decorator([signin_required,never_cache],name="dispatch")
@@ -202,8 +202,9 @@ class OrderSummaryView(View):
         
 
 
-@method_decorator([signin_required,owner_permission_required,never_cache],name="dispatch")        
+@method_decorator([signin_required,never_cache],name="dispatch")        
 class OrderitemRemove(View):
+        
         def get(self,request,*args,**kwargs):
             id=kwargs.get("pk")
             OrderItems.objects.get(id=id).delete()
@@ -211,24 +212,23 @@ class OrderitemRemove(View):
 
 
 
-# for payment only csrf exempt is used
-@method_decorator(csrf_exempt,name="dispatch")       
+# csrf exempt is used only for payment 
+@method_decorator(csrf_exempt,name="dispatch")
 class PaymentVerificationView(View):
-
     def post(self,request,*args,**kwargs):
-        client = razorpay.Client(auth=(KEY_ID, KEY_SECRET))
+        client=razorpay.Client(auth=(KEY_ID,KEY_SECRET))
         data=request.POST
         try:
             client.utility.verify_payment_signature(data)
-            print(data)
+
             order_obj=Order.objects.get(order_id=data.get("razorpay_order_id"))
+
             order_obj.is_paid=True
             order_obj.save()
-            print("Transaction Successfull*******")
+            print("Transaction Completed*")
         except:
-            print("Transaction Failed!!!!!!!!")
-
-        return render (request,"success.html")
+            print("!!!!!!!!!!!!!!!!!Transaction Failed!!!!!!!!!!!!!!!!!!!!!")
+        return render(request,"success.html")
 
 
 

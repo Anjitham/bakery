@@ -106,6 +106,15 @@ class BasketItem(models.Model):
     def item_total(self):
         return self.qty*self.cake_varient_object.price
     
+
+
+def create_basket(sender,instance,created,**kwargs):
+    if created:
+        Basket.objects.create(owner=instance)
+
+post_save.connect(create_basket,sender=User)
+
+
 class Order(models.Model):
 
     user_object=models.ForeignKey(User,on_delete=models.CASCADE,related_name="purchase")
@@ -147,9 +156,3 @@ class OrderItems(models.Model):
     basket_item_object=models.ForeignKey(BasketItem,on_delete=models.CASCADE)
     
     
-
-def create_basket(sender,instance,created,**kwargs):
-    if created:
-        Basket.objects.create(owner=instance)
-
-post_save.connect(create_basket,sender=User)

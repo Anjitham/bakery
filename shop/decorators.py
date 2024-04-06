@@ -16,7 +16,7 @@ def owner_permission_required(fn):
 
     def wrapper(request,*args,**kwargs):
         id=kwargs.get("pk")
-        basket_item=basket_item.objects.get(id=id)
+        basket_item=BasketItem.objects.get(id=id)
         if request.user!=basket_item.basket_object.owner :
             messages.error(request,"Permisssion denied")
             return redirect("signin")
