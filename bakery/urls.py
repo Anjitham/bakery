@@ -33,10 +33,11 @@ urlpatterns = [
     path("signout/",views.SignOutView.as_view(),name="signout"),
     path("basket/items/<int:pk>/qty/change/",views.CartItemUpdateQtyView.as_view(),name="editcart-qty"),
     path("checkout/",views.CheckOutView.as_view(),name="checkout"),
+    path("payment/verification/",views.PaymentVerificationView.as_view(),name="payment-verification"),
     path("orders/summary/",views.OrderSummaryView.as_view(),name="order-summary"),
     path("orders/item/<int:pk>/remove/",views.OrderitemRemove.as_view(),name="order-item-remove"),
-    path("payment/verification/",views.PaymentVerificationView.as_view(),name="payment-verification")
-
+    path("contact/",views.ContactView.as_view(),name="contact")
+    
     
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

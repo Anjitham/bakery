@@ -1,109 +1,111 @@
 {%extends 'base.html'%}
 
 {%block main_block%}
-
-<div class="mx-auto flex max-w-3xl flex-col space-y-4 p-6 px-2 sm:p-10 sm:px-2">
-  <h2 class="text-3xl font-bold">Your cart</h2>
-  
-  <ul class="flex flex-col divide-y divide-gray-200">
-    {%for bi in data%}
+<div class="container-fluid " 
+  style="background-image: url('/img/f.avif');background-repeat: no-repeat;background-size:cover;height: 100%;">
+  <div class="mx-auto flex max-w-3xl flex-col space-y-4 p-6 px-2 sm:p-10 sm:px-2">
+    <h2 class="text-3xl font-bold text-gray-300">Your cart</h2>
     
-    <li class="flex flex-col py-6 sm:flex-row sm:justify-between">
-      <div class="flex w-full space-x-2 sm:space-x-4">
-        <img
-          class="h-20 w-20 flex-shrink-0 rounded object-contain outline-none dark:border-transparent sm:h-32 sm:w-32"
-          src="{{bi.cake_varient_object.image.url}}"
-          alt="Nike Air Force 1 07 LV8"
-        />
-        <div class="flex w-full flex-col justify-between pb-4">
-          <div class="flex w-full justify-between space-x-2 pb-2">
-            <div class="space-y-1">
-              <h3 class="text-lg font-semibold leading-snug sm:pr-8">
-                {{bi.cake_varient_object.cake_object.name}}
-              </h3>
-              <form action="{%url 'editcart-qty' bi.id%}" method="post">
-                {%csrf_token%}
-                {% if bi.qty > 1 %}
-                <button type="submit" 
-                class="py-2 btn " 
-                name="counterbutton"
-                value="-">
-                  -
+    <ul class="flex flex-col divide-y divide-gray-200">
+      {%for bi in data%}
+      
+      <li class="flex flex-col py-6 sm:flex-row sm:justify-between">
+        <div class="flex w-full space-x-2 sm:space-x-4">
+          <img
+            class="h-20 w-20 flex-shrink-0 rounded object-contain outline-none dark:border-transparent sm:h-32 sm:w-32"
+            src="{{bi.cake_varient_object.image.url}}"
+            alt="Nike Air Force 1 07 LV8"
+          />
+          <div class="flex w-full flex-col justify-between pb-4">
+            <div class="flex w-full justify-between space-x-2 pb-2">
+              <div class="space-y-1">
+                <h3 class="text-lg font-semibold leading-snug sm:pr-8 text-gray-300">
+                  {{bi.cake_varient_object.cake_object.name}}
+                </h3>
+                <form action="{%url 'editcart-qty' bi.id%}" method="post">
+                  {%csrf_token%}
+                  {% if bi.qty > 1 %}
+                  <button type="submit" 
+                  class="py-2 btn text-gray-300 " 
+                  name="counterbutton"
+                  value="-">
+                    -
+                  </button>
+                  {%endif%}
+                <input
+                type="text"
+                class="mx-1 h-7 w-9 rounded-md border text-center"
+                value="{{bi.qty}}"
+                disabled
+                />
+                <button
+                  type="submit"
+                  class="py-2 btn text-gray-300" 
+                  name="counterbutton"
+                  value="+"
+                >
+                  +
                 </button>
-                {%endif%}
-              <input
-              type="text"
-              class="mx-1 h-7 w-9 rounded-md border text-center"
-              value="{{bi.qty}}"
-              disabled
-              />
+              </form>
+              
+              </div>
+              <div class="text-right text-gray-300">
+                <p class="text-lg font-semibold">₹{{bi.item_total}}</p>
+              </div>
+            </div>
+            <div class="flex divide-x text-sm">
               <button
                 type="submit"
-                class="py-2 btn" 
-                name="counterbutton"
-                value="+"
+                class="flex items-center space-x-2 px-2 py-1 pl-0 text-gray-300 "
               >
-                +
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-trash" 
+                >
+                <a href="{%url 'basket-item-remove' bi.id%}"></a>
+                  <path d="M3 6h18"></path>
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                </svg>
+                
+                <a href="{%url 'basket-item-remove' bi.id%}" class="text-gray-300">Remove</a>
               </button>
-            </form>
-            
-            </div>
-            <div class="text-right">
-              <p class="text-lg font-semibold">₹{{bi.item_total}}</p>
-            </div>
-          </div>
-          <div class="flex divide-x text-sm">
-            <button
-              type="submit"
-              class="flex items-center space-x-2 px-2 py-1 pl-0"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-trash" 
-              >
-              <a href="{%url 'basket-item-remove' bi.id%}"></a>
-                <path d="M3 6h18"></path>
-                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-              </svg>
               
-              <a href="{%url 'basket-item-remove' bi.id%}">Remove</a>
-            </button>
-            
+            </div>
           </div>
         </div>
-      </div>
-    </li>
-    {%endfor%}
-  </ul>
+      </li>
+      {%endfor%}
+    </ul>
 
 
-  <div class="space-y-1 text-right">
-    <p>
-      Total amount:<span class="font-semibold"> ₹{{request.user.cart.basket_total}}</span>
-    </p>
-  </div>
-  <div class="flex justify-end space-x-4">
-    <button
-      type="button"
-      class="rounded-md bg-yellow-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-900/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-    >
-       <a href="{%url 'index'%}">Back to shop</a> 
-    </button>
-    <button
-      type="submit"
-      class="rounded-md bg-yellow-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-900/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-    >
-      <a href="{%url 'checkout'%}">Checkout</a>
-    </button>
+    <div class="space-y-1 text-right text-gray-300">
+      <p>
+        Total amount:<span class="font-semibold"> ₹{{request.user.cart.basket_total}}</span>
+      </p>
+    </div>
+    <div class="flex justify-end space-x-4">
+      <button
+        type="button"
+        class="rounded-md bg-yellow-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-900/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+      >
+        <a href="{%url 'index'%}">Back to shop</a> 
+      </button>
+      <button
+        type="submit"
+        class="rounded-md bg-yellow-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-900/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+      >
+        <a href="{%url 'checkout'%}">Checkout</a>
+      </button>
+    </div>
   </div>
 </div>
 

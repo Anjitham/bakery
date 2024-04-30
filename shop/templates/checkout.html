@@ -1,7 +1,9 @@
 {%extends 'base.html' %}
 
 {%block main_block%}
-<div class="mx-auto w-full max-w-xl  py-2">
+<div class="container-fluid " 
+  style="background-image: url('/img/f.avif');background-repeat: no-repeat;background-size:cover;height: 100%;">
+  <div class="mx-auto w-full max-w-xl  py-2">
     <div class="mx-auto my-5 max-w-2xl md:my-6">
       <nav class="mb-8 flex" aria-label="Breadcrumb">
         <!-- <ol class="inline-flex items-center space-x-1 md:space-x-3"> -->
@@ -130,7 +132,7 @@
           </div>
           
           <a href="{%url 'basket-items' %}"
-          class="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+          class="rounded-md bg-yellow-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
           >
           View Items
           </a>
@@ -260,6 +262,7 @@
       </div>
     </div>
   </div>
+</div>
   
 
 {%endblock%}

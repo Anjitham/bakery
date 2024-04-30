@@ -238,3 +238,8 @@ class SignOutView(View):
     def get(self,request,*args,**kwargs):
         logout(request)
         return redirect("signin")
+    
+
+class ContactView(View):
+    def get(self,request,*args,**kwargs):
+        return render (request,"contact.html")
