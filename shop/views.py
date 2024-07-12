@@ -4,7 +4,6 @@ from shop.forms import RegistrationForm,LoginForm
 from django.contrib.auth import authenticate,login,logout
 from shop.models import Category,Cake,CakeVarient,Occasion,BasketItem,Order,OrderItems
 import razorpay
-from django.contrib import messages
 from django.views.decorators.cache import never_cache
 from django.utils.decorators import method_decorator
 from shop.decorators import signin_required,owner_permission_required
@@ -35,12 +34,13 @@ class SignUpView(View):
 # lh:8000/sigin
 # get,post
 # form_class:loginform
-    
+
+
 class SignInView(View):
     def get(self,request,*args,**kwargs):
         form=LoginForm()
         return render(request,"signin.html",{"form":form})
-
+  
     def post(self,request,*args,**kwargs):
         form=LoginForm(request.POST)
         if form.is_valid():
@@ -52,9 +52,9 @@ class SignInView(View):
                 return redirect("index")
         return render(request,"signin.html",{"form":form})
     
-# class IndexView(TemplateView):
-#     template_name="index.html"
-    
+# lh:8000/index/
+# get
+ 
 @method_decorator([signin_required,never_cache],name="dispatch")
 class IndexView(View):
     def get(self,request,*args,**kwargs):
@@ -62,6 +62,8 @@ class IndexView(View):
         return render(request,"index.html",{"data":qs})
     
     
+# lh:8000/cakelist/
+# get
 
 @method_decorator([signin_required,never_cache],name="dispatch")
 class CakeListView(View):
@@ -123,7 +125,7 @@ class CartItemUpdateQtyView(View):
 
     def post(self,request,*args,**kwargs):
         action=request.POST.get("counterbutton")
-        print(action)
+        # print(action)
         id=kwargs.get("pk")
         basket_item_object=BasketItem.objects.get(id=id)
 
@@ -149,6 +151,7 @@ class CheckOutView(View):
         last_name=request.POST.get("lastname")
         email=request.POST.get("email")
         phone_number=request.POST.get("phone")
+        pincode=request.POST.get("pincode")
         delivery_address=request.POST.get("address")
         payment_method=request.POST.get("payment")
 
@@ -158,9 +161,10 @@ class CheckOutView(View):
             last_name=last_name,
             email=email,
             phone_number=phone_number,
+            pincode=pincode,
             delivery_address=delivery_address,
             payment=payment_method,
-            total=request.user.cart.basket_total
+            # total=request.user.cart.basket_total
         )
 
         try:
@@ -225,12 +229,16 @@ class PaymentVerificationView(View):
 
             order_obj.is_paid=True
             order_obj.save()
-            print("Transaction Completed*")
+            print("Transaction Completed")
         except:
             print("!!!!!!!!!!!!!!!!!Transaction Failed!!!!!!!!!!!!!!!!!!!!!")
         return render(request,"success.html")
 
 
+
+class ContactView(View):
+    def get(self,request,*args,**kwargs):
+        return render (request,"contact.html")
 
 @method_decorator([signin_required,never_cache],name="dispatch")  
 class SignOutView(View):
@@ -239,7 +247,3 @@ class SignOutView(View):
         logout(request)
         return redirect("signin")
     
-
-class ContactView(View):
-    def get(self,request,*args,**kwargs):
-        return render (request,"contact.html")

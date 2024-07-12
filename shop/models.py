@@ -19,7 +19,6 @@ class Category(models.Model):
     
     def __str__(self):
         return self.category_name
-
     
 class Occasion(models.Model):
     occasion_name=models.CharField(max_length=150,unique=True)
@@ -66,7 +65,7 @@ class CakeVarient(models.Model):
     created_date=models.DateTimeField(auto_now_add=True)
     updated_date=models.DateTimeField(auto_now=True)
     is_active=models.BooleanField(default=True)   
-
+ 
     
 
 class Basket(models.Model):
@@ -122,9 +121,10 @@ class Order(models.Model):
     last_name=models.CharField(max_length=200)
     email=models.CharField(max_length=200,null=True)
     phone_number=models.CharField(max_length=12)
+    pincode=models.CharField(max_length=6,default=False)
     delivery_address=models.CharField(max_length=200)
     is_paid=models.BooleanField(default=False)
-    total=models.PositiveIntegerField()
+    # total=models.PositiveIntegerField()
     order_id=models.CharField(max_length=200,null=True)
     options=(
         ("cod","cod"),
